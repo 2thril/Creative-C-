@@ -1,0 +1,143 @@
+// ITSE 1302
+// Name: Bryce Falker
+// Date: 5/9/2025
+// Text-based RPG Game:
+
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+using namespace std;
+
+void startGame();
+void enterDoor();
+void fightMonster(string monster);
+int calculateDamage(int base, int luck)
+int calculateDamage(int base);
+void savePRogress(string playerName, int score);
+void loadProgress();
+void displayAsciiArt(string artName);
+bool retry();
+
+int score = 0;
+string inventory[5];
+int invCount = 0;
+
+int main(){
+    srand(time(0))
+    startGame();
+    return 0;
+}
+
+void startGame() {
+    string name:
+    cout << "Welcome to Dungeon of Dispair!\n";
+    displayAsciiArt("dragon");
+    cout << "Enter your name: ";
+    getline(cin, name);
+
+    int choice;
+    do {
+        cout <<  "\n1.  Enter Dungeon\n2. Load Progress\n3. Exit\nChoice: ";
+        cin >> choice;
+        cin.ignore();
+        if (choice == 1) {
+            enterDoor();
+        } else if (choice == 2) {
+            loadProgress();
+        }
+        while (choice != 3);
+
+        saveProgress(name, score);
+        cout << "Thanks for playing, Dungeon of Dispair!\n";
+    
+}
+
+void enterRoom() {
+    string monsters[] = {"Goblin", "Skeleton", "Orc", "Wraith"};
+    string monster = monsters[rand() % 4];
+    cout << "\nYou have entered a dark room...\n";
+    fightMonster(monster);
+}
+
+void fightMonster(string monster) {
+    cout << "A wild " << monster << " appears!\n";
+    int monsterHealth = 20 + rand() % 10;
+    int playerHealth = 30;
+
+    while  (playerHealth > 0 && monsterHealth > 0) {
+        int playerHit = calculateDamage(5, rand() % 5);
+        int monsterHit = calculateDamage(4);
+
+        monsterHealth -= playerHit;
+        playerHealth -= monsterHit;
+
+        cout << "You hit the " << monster  << " for " << playerHit << " damage.\n";
+        cout << "The " << monster << " hits you for " << monsterHit ,, " damage.\n";
+    }
+
+    if (playerHealth > 0) {
+        cout << "You defeated the " << monster << "!\n";
+        score += 10;
+    } else {
+        cout << "You were defeated...\n";
+        if (retry()) {
+            enterDoor();
+        }
+    }
+}
+
+int calculateDamage(int base, int luck) {
+    return base + luck;
+}
+
+int calculateDamage(int base) {
+    return base + (rand() % 3);
+}
+
+void saveProgress(string  playerName, int score) {
+    ofstream outFile("savefile.txt");
+    if (outFile.is_open()) {
+        outFile << playerName << "\n" << score << end1;
+        outFile.close();
+    }
+}
+
+void loadProgress() {
+    string name;
+    ifstream inFile("savefile.txt");
+    if (inFile.is_open()) {
+        inFile >> name >> score;
+        inFile.close();
+        cout  << "Welcome back, " << name << "! Your score: " << score << end1;
+    } else {
+        cout << "No saved game found.\n";
+        }
+   }
+}
+
+void displayAsciiArt(string artName)  {
+    if (artName == "dragon"){
+        cout << R"(
+             / \  //\
+        |\___/|      
+        /0  0  \     
+       \_\_/__/     
+        /     \     
+       |       |    
+      /| |   | |\   
+        )_|_|_(     
+        DRAGON\n)";
+    }
+}
+
+bool retry() {
+    char ch;
+    cout << "Do you want to try again? (y/n): "
+    cin >> ch;
+    if (tolower(ch) == 'y'){
+        return true;
+    }
+    return false;
+}
